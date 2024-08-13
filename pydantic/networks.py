@@ -50,6 +50,7 @@ __all__ = [
     'MySQLDsn',
     'MariaDBDsn',
     'ClickHouseDsn',
+    'SnowflakeDsn',
 ]
 
 
@@ -391,6 +392,17 @@ ClickHouseDsn = Annotated[
     ),
 ]
 """A type that will accept any ClickHouse DSN.
+
+* User info required
+* TLD not required
+* Host required
+"""
+
+SnowflakeDsn = Annotated[
+    Url,
+    UrlConstraints(allowed_schemes=['snowflake'], default_host='localhost', default_port=443),
+]
+"""A type that will accept any Snowflake DSN
 
 * User info required
 * TLD not required

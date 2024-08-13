@@ -22,6 +22,7 @@ from pydantic import (
     NatsDsn,
     PostgresDsn,
     RedisDsn,
+    SnowflakeDsn,
     Strict,
     UrlConstraints,
     ValidationError,
@@ -62,6 +63,7 @@ except ImportError:
         'mariadb://user:pass@localhost:3306/app',
         'mariadb+mariadbconnector://user:pass@localhost:3306/app',
         'mariadb+pymysql://user:pass@localhost:3306/app',
+        'snowflake://user:pass@myaccount.us-east-1.snowflakecomputing.com:443/mydatabase/myschema/app',
         'foo-bar://example.org',
         'foo.bar://example.org',
         'foo0bar://example.org',
@@ -530,6 +532,19 @@ def test_mariadb_dsns(dsn):
 def test_clickhouse_dsns(dsn):
     class Model(BaseModel):
         a: ClickHouseDsn
+
+    assert str(Model(a=dsn).a) == dsn
+
+
+@pytest.mark.parametrize(
+    'dsn',
+    [
+        'snowflake://user:pass@myaccount.us-east-1.snowflakecomputing.com:443/mydatabase/myschema/app',
+    ],
+)
+def test_snowflake_dsns(dsn):
+    class Model(BaseModel):
+        a: SnowflakeDsn
 
     assert str(Model(a=dsn).a) == dsn
 
